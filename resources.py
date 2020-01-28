@@ -44,6 +44,7 @@ class SpeciesResource(Resource):
         return schema.dump(Species.query.all())
 
 
+
 class CompetitionResource(Resource):
     def get(self):
         result = []
