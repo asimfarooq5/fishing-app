@@ -32,6 +32,7 @@ class Competition(db.Model):
     style = db.Column(db.Integer, nullable=True)
     name = db.Column(db.String(50), nullable=True)
     detail = db.Column(db.String(50), nullable=True)
+    end_date = db.Column(db.String(50), nullable=True)
     comp_rel = db.relationship('Submission', backref='competition')
 
     def __str__(self):

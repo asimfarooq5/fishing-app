@@ -72,3 +72,8 @@ class CompetitionModelView(MyModeView):
             ('2', '2')
         ]
     }
+
+
+class ScoreModelView(MyModeView):
+    column_list = ['score', 'angler_uid', 'species_uid', 'comp_uid']
+    form_columns = ['score', 'angler_uid', 'species_uid', 'comp_uid']

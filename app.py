@@ -6,9 +6,9 @@ from flask_restful import Api, abort
 from werkzeug.security import check_password_hash
 
 import flask_admin as admin
-from admin import AnglerModelView, SpeciesModelView, CompetitionModelView
+from admin import AnglerModelView, SpeciesModelView, CompetitionModelView, ScoreModelView
 
-from models import db, Angler, Species, Competition
+from models import db, Angler, Species, Competition, Score
 from serializers import ma
 from resources import AnglerResource, SpeciesResource, CompetitionResource, SubmissionResource, ScoreResource
 
@@ -97,5 +97,6 @@ if __name__ == '__main__':
     admin.add_view(AnglerModelView(Angler, db.session, url='/angler'))
     admin.add_view(SpeciesModelView(Species, db.session, url='/species'))
     admin.add_view(CompetitionModelView(Competition, db.session, url='/competition'))
+    admin.add_view(ScoreModelView(Score, db.session, url='/score'))
 
     app.run(host='0.0.0.0', debug=True)
