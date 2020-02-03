@@ -28,6 +28,7 @@ class Competition(db.Model):
     name = db.Column(db.String(50), nullable=True)
     detail = db.Column(db.String(50), nullable=True)
     score = db.Column(db.String(50), nullable=True)
+    enabled = db.Column(db.Boolean, default=False)
     image = db.Column(db.String(50), nullable=True)
     cut_off_time = db.Column(db.String(50), nullable=True)
     end_date = db.Column(db.String(50), nullable=True)

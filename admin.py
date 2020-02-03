@@ -63,8 +63,8 @@ class SpeciesModelView(MyModeView):
 
 
 class CompetitionModelView(MyModeView):
-    column_list = ['name', 'detail', 'style', 'image']
-    form_columns = ['name', 'detail', 'style', 'image']
+    column_list = ['name', 'detail', 'style', 'end_date', 'enabled', 'image']
+    form_columns = ['name', 'detail', 'style', 'end_date', 'enabled', 'image']
 
     form_choices = {
         'style': [
