@@ -6,7 +6,7 @@ db = SQLAlchemy()
 
 
 class Angler(db.Model):
-    uid = db.Column(db.Integer, primary_key=True)
+    angler_id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=True)
     image = db.Column(db.String(50), nullable=True)
     ang_rel = db.relationship('Submission', backref='angler')
@@ -14,7 +14,7 @@ class Angler(db.Model):
 
 
 class Specie(db.Model):
-    uid = db.Column(db.Integer, primary_key=True)
+    specie_id = db.Column(db.Integer, primary_key=True)
     style_1 = db.Column(db.Boolean, default=False)
     style_2 = db.Column(db.Boolean, default=False)
     specie = db.Column(db.String(50), nullable=True)
@@ -23,7 +23,7 @@ class Specie(db.Model):
 
 
 class Competition(db.Model):
-    uid = db.Column(db.Integer, primary_key=True)
+    competition_id = db.Column(db.Integer, primary_key=True)
     style = db.Column(db.Integer, nullable=True)
     name = db.Column(db.String(50), nullable=True)
     detail = db.Column(db.String(50), nullable=True)
