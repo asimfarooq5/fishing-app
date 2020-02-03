@@ -1,6 +1,6 @@
 import os.path as op
 
-from flask import Flask, render_template, session, flash, redirect, request, make_response
+from flask import Flask, render_template, session, flash, redirect, request, make_response, send_from_directory, url_for
 from flask_admin import AdminIndexView, expose
 from flask_restful import Api, abort
 from werkzeug.security import check_password_hash
@@ -13,7 +13,7 @@ from serializers import ma
 from resources import AnglerResource, SpeciesResource, CompetitionResource, SubmissionResource, ScoreResource
 
 UPLOAD_FOLDER = './upload'
-app = Flask(__name__, static_folder='upload')
+app = Flask(__name__, static_folder='images')
 path = op.join(op.dirname(__file__), 'statics')
 app.config['SECRET_KEY'] = '5791628bb0b13ce0c676dfde280ba245'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///main.db'
