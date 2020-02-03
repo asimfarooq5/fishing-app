@@ -72,6 +72,7 @@ class SubmissionResource(Resource):
         parser.add_argument('image', help='Captured Fish Image', type=werkzeug.datastructures.FileStorage,
                             location='files', required=False, action='append')
         args = parser.parse_args(strict=True)
+        submission = Submission.query.filter(Submission.angler_uid == args['angler_uid']).first()
         if args['style'] == '1' and len(args['image']) > 2:
             return "more then 2 images not allowed in selected style"
         count = 1
@@ -94,6 +95,7 @@ class SubmissionResource(Resource):
                 db.session.commit()
 
         angler = Angler.query.filter((Angler.uid == args['angler_uid'])).first()
+
         competition = Competition.query.filter((Competition.uid == args['comp_uid'])).first()
 
         post = Submission()
@@ -101,9 +103,12 @@ class SubmissionResource(Resource):
         post.style = args['style']
         post.score = int(species.score) * int(args['length'])
         post.length = args['length']
-        post.angler_uid = angler.name
-        post.comp_uid = competition.name
-        post.specie_uid = species.specie
+        post.angler_uid = args['angler_uid']
+        post.comp_uid = args['comp_uid']
+        post.specie_uid = args['specie_uid']
+        post.competition_name = competition.name
+        post.specie_name = species.specie
+        post.angler_name = angler.name
         if args['friend']:
             post.friend = True
         post.image = filename

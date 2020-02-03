@@ -8,7 +8,6 @@ db = SQLAlchemy()
 class Angler(db.Model):
     uid = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=True)
-    image = db.Column(db.String(50), nullable=True)
     ang_rel = db.relationship('Submission', backref='angler')
     scr_rel = db.relationship('Score', backref='anglers')
 
@@ -48,6 +47,9 @@ class Submission(db.Model):
     angler_uid = db.Column(db.Integer, db.ForeignKey("angler.uid"))
     specie_uid = db.Column(db.Integer, db.ForeignKey("specie.uid"))
     comp_uid = db.Column(db.Integer, db.ForeignKey("competition.uid"))
+    angler_name = db.Column(db.String(50), nullable=True)
+    specie_name = db.Column(db.String(50), nullable=True)
+    competition_name = db.Column(db.String(50), nullable=True)
 
 
 class Image(db.Model):

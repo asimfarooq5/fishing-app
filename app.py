@@ -97,6 +97,6 @@ if __name__ == '__main__':
     admin.add_view(AnglerModelView(Angler, db.session, url='/angler'))
     admin.add_view(SpeciesModelView(Specie, db.session, url='/specie'))
     admin.add_view(CompetitionModelView(Competition, db.session, url='/competition'))
-    admin.add_view(ScoreModelView(Submission, db.session, url='/score'))
+    admin.add_view(ScoreModelView(Submission, db.session, url='/score', name='Score'))
 
     app.run(host='0.0.0.0', port=5000, debug=True)

@@ -39,22 +39,11 @@ class MyModeView(ModelView):
 
 
 class AnglerModelView(MyModeView):
-    column_list = ['name', 'image', ]
-    form_columns = ['name', 'image', ]
+    column_list = ['name', ]
+    form_columns = ['name', ]
 
     form_overrides = dict(image=FileUploadField)
     form_args = dict(image=dict(validators=[picture_validation]))
-
-    def create_model(self, form):
-        model = super().create_model(form)
-        model.image = form.data['image']
-        db.session.add(model)
-        db.session.commit()
-        return model
-
-    def delete_model(self, form):
-        super().delete_model(form)
-        os.remove(path=f'./images/{form.image}')
 
 
 class SpeciesModelView(MyModeView):
@@ -63,8 +52,8 @@ class SpeciesModelView(MyModeView):
 
 
 class CompetitionModelView(MyModeView):
-    column_list = ['name', 'detail', 'style', 'end_date', 'enabled', 'image']
-    form_columns = ['name', 'detail', 'style', 'end_date', 'enabled', 'image']
+    column_list = ['name', 'detail', 'end_date', 'enabled', 'style', 'image']
+    form_columns = ['name', 'detail', 'end_date', 'enabled', 'style', 'image']
 
     form_choices = {
         'style': [
@@ -90,6 +79,7 @@ class CompetitionModelView(MyModeView):
 
 class ScoreModelView(MyModeView):
     can_create = False
+    can_edit = False
     # column_sortable_list = (Score.score, )
     column_default_sort = ('score', True)
-    column_list = ['angler', 'competition', 'score', ]
+    column_list = ['angler_name', 'competition_name', 'score', ]
