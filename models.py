@@ -43,6 +43,7 @@ class Submission(db.Model):
     length = db.Column(db.Integer, nullable=True)
     friend = db.Column(db.Boolean, nullable=True)
     image = db.Column(db.String(50), nullable=True)
+    score = db.Column(db.String(50), nullable=True)
     date = db.Column(db.String(255), default=lambda: date.today())
     angler_uid = db.Column(db.Integer, db.ForeignKey("angler.uid"))
     specie_uid = db.Column(db.Integer, db.ForeignKey("specie.uid"))

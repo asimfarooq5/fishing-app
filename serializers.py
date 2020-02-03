@@ -27,7 +27,7 @@ class SubmissionSchema(ma.Schema):
     class Meta:
         model = Submission
         fields = ('uid', 'style', 'length', 'angler_uid', 'species_uid',
-                  'comp_uid', 'for_self', 'image', 'friend', 'date',)
+                  'comp_uid', 'for_self', 'image', 'friend', 'date', 'score')
 
 
 class ScoreSchema(ma.Schema):

@@ -93,13 +93,17 @@ class SubmissionResource(Resource):
                 db.session.add(image1)
                 db.session.commit()
 
+        angler = Angler.query.filter((Angler.uid == args['angler_uid'])).first()
+        competition = Competition.query.filter((Competition.uid == args['comp_uid'])).first()
+
         post = Submission()
         post.device_id = args['device_id']
         post.style = args['style']
+        post.score = int(species.score) * int(args['length'])
         post.length = args['length']
-        post.angler_uid = args['angler_uid']
-        post.comp_uid = args['comp_uid']
-        post.specie_uid = args['specie_uid']
+        post.angler_uid = angler.name
+        post.comp_uid = competition.name
+        post.specie_uid = species.specie
         if args['friend']:
             post.friend = True
         post.image = filename
