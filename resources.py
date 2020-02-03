@@ -186,6 +186,13 @@ class ScoreResource(Resource):
         parser = reqparse.RequestParser(bundle_errors=True)
         parser.add_argument('comp_uid', type=str, help='competetion_uid', required=True)
         args = parser.parse_args(strict=True)
-        scores = ScoreSchema(many=True).dump(Score.query.filter_by(
-            comp_uid=args['comp_uid']).all())
-        return scores, 200
+        result = []
+        # scores = ScoreSchema(many=True).dump(Score.query.filter_by(
+        #     comp_uid=args['comp_uid']).all())
+        score = Score.query.order_by(Score.score.desc())
+        schema = ScoreSchema(many=True)
+        scores = schema.dump(score)
+        for curr_score in scores:
+            if str(curr_score['comp_uid']) == args['comp_uid']:
+                result.append(curr_score)
+        return result, 200
