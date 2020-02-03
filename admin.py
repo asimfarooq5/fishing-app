@@ -63,8 +63,8 @@ class SpeciesModelView(MyModeView):
 
 
 class CompetitionModelView(MyModeView):
-    column_list = ['name', 'detail', 'style', ]
-    form_columns = ['name', 'detail', 'style', ]
+    column_list = ['name', 'detail', 'style', 'image']
+    form_columns = ['name', 'detail', 'style', 'image']
 
     form_choices = {
         'style': [
@@ -72,6 +72,20 @@ class CompetitionModelView(MyModeView):
             ('2', '2')
         ]
     }
+
+    form_overrides = dict(image=FileUploadField)
+    form_args = dict(image=dict(validators=[picture_validation]))
+
+    def create_model(self, form):
+        model = super().create_model(form)
+        model.image = form.data['image']
+        db.session.add(model)
+        db.session.commit()
+        return model
+
+    def delete_model(self, form):
+        super().delete_model(form)
+        os.remove(path=f'./images/{form.image}')
 
 
 class ScoreModelView(MyModeView):

@@ -1,7 +1,6 @@
 import os
-import uuid
 import os.path as op
-from datetime import date, timezone
+from datetime import date
 
 import werkzeug
 
@@ -47,6 +46,7 @@ class SpeciesResource(Resource):
 
 class CompetitionResource(Resource):
     def get(self):
+        schema = CompetitionSchema(many=True)
         # result = []
         # submissions = Submission.query.all()
         # for sub in submissions:
@@ -56,7 +56,6 @@ class CompetitionResource(Resource):
         #     root['submission'] = child
         #     result.append(root)
         # return result, 200
-        schema = CompetitionSchema(many=True)
         return schema.dump(Competition.query.all())
 
 
@@ -67,7 +66,7 @@ class SubmissionResource(Resource):
         parser.add_argument('style', type=str, help='Competition Style', required=True)
         parser.add_argument('length', type=str, help='Fish length in CM', required=True)
         parser.add_argument('angler_uid', type=str, help='angler_id', required=True)
-        parser.add_argument('species_uid', type=str, help='species_id', required=True)
+        parser.add_argument('specie_uid', type=str, help='specie_id', required=True)
         parser.add_argument('comp_uid', type=str, help='competition_uid', required=True)
         parser.add_argument('friend', type=boolean, help='True/False', required=False)
         parser.add_argument('image', help='Captured Fish Image', type=werkzeug.datastructures.FileStorage,
@@ -80,23 +79,30 @@ class SubmissionResource(Resource):
         if args['image']:
             images = args['image']
             filename = ''
-            species = Specie.query.filter(Specie.uid == args['species_uid']).first()
+            species = Specie.query.filter(Specie.uid == args['specie_uid']).first()
             for image in images:
-                filename = str(count) + "-" + args['device_id'] + "-" + species.species + "-" + args[
-                    "length" + "cm"] + "." + image.filename.split('.')[-1]
+                filename = str(count) + "-" + args['device_id'] + "-" + species.specie + "-" + args[
+                    "length"] + "." + image.filename.split('.')[-1]
                 print(filename)
                 count += 1
                 image.save(os.path.abspath(os.path.join(image_path, filename)))
                 image1.angler_uid = args['angler_uid']
                 image1.comp_uid = args['comp_uid']
-                image1.species_uid = args['species_uid']
+                image1.specie_uid = args['specie_uid']
                 image1.image = filename
                 db.session.add(image1)
                 db.session.commit()
 
-        post = Submission(**args)
-        if args['friend'].lower() == 'true':
+        post = Submission()
+        post.device_id = args['device_id']
+        post.style = args['style']
+        post.length = args['length']
+        post.angler_uid = args['angler_uid']
+        post.comp_uid = args['comp_uid']
+        post.specie_uid = args['specie_uid']
+        if args['friend']:
             post.friend = True
+        post.image = filename
 
         db.session.add(post)
         db.session.commit()
@@ -177,6 +183,9 @@ class ScoreResource(Resource):
         return schema.dump(score), 201
 
     def get(self):
-        score = Score.query.order_by(Score.score.desc())
-        schema = ScoreSchema(many=True)
-        return schema.dump(score), 200
+        parser = reqparse.RequestParser(bundle_errors=True)
+        parser.add_argument('comp_uid', type=str, help='competetion_uid', required=True)
+        args = parser.parse_args(strict=True)
+        scores = ScoreSchema(many=True).dump(Score.query.filter_by(
+            comp_uid=args['comp_uid']).all())
+        return scores, 200
