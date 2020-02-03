@@ -92,4 +92,4 @@ class ScoreModelView(MyModeView):
     can_create = False
     # column_sortable_list = (Score.score, )
     column_default_sort = ('score', True)
-    column_list = ['angler', 'score', ]
+    column_list = ['angler', 'competition', 'score', ]
