@@ -1,6 +1,6 @@
 from flask_marshmallow import Marshmallow
 
-from models import Angler, Species, Competition, Submission, Score
+from models import Angler, Specie, Competition, Submission, Score
 
 ma = Marshmallow()
 
@@ -13,14 +13,14 @@ class AnglerSchema(ma.Schema):
 
 class SpeciesSchema(ma.Schema):
     class Meta:
-        model = Species
+        model = Specie
         fields = ('uid', 'species',)
 
 
 class CompetitionSchema(ma.Schema):
     class Meta:
         model = Competition
-        fields = ('uid', 'name', 'detail', 'style',)
+        fields = ('uid', 'name', 'detail', 'style', 'start_date', 'end_date')
 
 
 class SubmissionSchema(ma.Schema):
@@ -33,4 +33,4 @@ class SubmissionSchema(ma.Schema):
 class ScoreSchema(ma.Schema):
     class Meta:
         model = Score
-        fields = ('uid', 'score', 'angler_uid', 'species_uid', 'comp_uid')
+        fields = ('uid', 'score', 'angler_uid', 'species_uid', 'comp_uid',)

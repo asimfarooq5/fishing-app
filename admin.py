@@ -6,7 +6,7 @@ from flask_admin.contrib.sqla import ModelView
 from flask_admin.form.upload import FileUploadField
 from wtforms.validators import ValidationError
 
-from models import db
+from models import db, Score
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'gif', 'jpeg'}
 
@@ -58,8 +58,8 @@ class AnglerModelView(MyModeView):
 
 
 class SpeciesModelView(MyModeView):
-    column_list = ['species']
-    form_columns = ['species', 'style_1', 'style_2']
+    column_list = ['specie', 'score']
+    form_columns = ['specie', 'score', 'style_1', 'style_2']
 
 
 class CompetitionModelView(MyModeView):
@@ -75,5 +75,7 @@ class CompetitionModelView(MyModeView):
 
 
 class ScoreModelView(MyModeView):
-    column_list = ['score', 'angler_uid', 'species_uid', 'comp_uid']
-    form_columns = ['score', 'angler_uid', 'species_uid', 'comp_uid']
+    can_create = False
+    # column_sortable_list = (Score.score, )
+    column_default_sort = ('score', True)
+    column_list = ['angler', 'score', ]

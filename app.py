@@ -8,7 +8,7 @@ from werkzeug.security import check_password_hash
 import flask_admin as admin
 from admin import AnglerModelView, SpeciesModelView, CompetitionModelView, ScoreModelView
 
-from models import db, Angler, Species, Competition, Score
+from models import db, Angler, Specie, Competition, Score
 from serializers import ma
 from resources import AnglerResource, SpeciesResource, CompetitionResource, SubmissionResource, ScoreResource
 
@@ -95,8 +95,8 @@ api.add_resource(ScoreResource, '/api/score/')
 if __name__ == '__main__':
     admin = admin.Admin(app, name='Home', index_view=MyAdminIndexView(name=' '), url='/angler')
     admin.add_view(AnglerModelView(Angler, db.session, url='/angler'))
-    admin.add_view(SpeciesModelView(Species, db.session, url='/species'))
+    admin.add_view(SpeciesModelView(Specie, db.session, url='/specie'))
     admin.add_view(CompetitionModelView(Competition, db.session, url='/competition'))
     admin.add_view(ScoreModelView(Score, db.session, url='/score'))
 
-    app.run(host='0.0.0.0', debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)
