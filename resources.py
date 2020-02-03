@@ -198,9 +198,10 @@ class ScoreResource(Resource):
         result = []
         # scores = ScoreSchema(many=True).dump(Score.query.filter_by(
         #     comp_uid=args['comp_uid']).all())
-        score = Score.query.order_by(Score.score.desc())
+        score = Submission.query.order_by(Submission.score.desc())
         schema = ScoreSchema(many=True)
         scores = schema.dump(score)
+        print(scores)
         for curr_score in scores:
             if str(curr_score['comp_uid']) == args['comp_uid']:
                 result.append(curr_score)

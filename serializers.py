@@ -20,7 +20,7 @@ class SpeciesSchema(ma.Schema):
 class CompetitionSchema(ma.Schema):
     class Meta:
         model = Competition
-        fields = ('uid', 'name', 'detail', 'style', 'start_date', 'end_date')
+        fields = ('uid', 'name', 'detail', 'style', 'start_date', 'end_date', 'image', 'enabled')
 
 
 class SubmissionSchema(ma.Schema):
