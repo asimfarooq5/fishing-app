@@ -10,7 +10,8 @@ from admin import AnglerModelView, SpeciesModelView, CompetitionModelView, Score
 
 from models import db, Angler, Specie, Competition, Score, Submission
 from serializers import ma
-from resources import AnglerResource, SpeciesResource, CompetitionResource, SubmissionResource, ScoreResource
+from resources import AnglerResource, SpeciesResource, CompetitionResource, SubmissionResource, ScoreResource, \
+    ImageResource
 
 UPLOAD_FOLDER = './upload'
 app = Flask(__name__, static_folder='images')
@@ -91,6 +92,7 @@ api.add_resource(SpeciesResource, '/api/species/')
 api.add_resource(CompetitionResource, '/api/competition/')
 api.add_resource(SubmissionResource, '/api/submission/')
 api.add_resource(ScoreResource, '/api/score/')
+api.add_resource(ImageResource, '/api/image/')
 
 if __name__ == '__main__':
     admin = admin.Admin(app, name='Home', index_view=MyAdminIndexView(name=' '), url='/angler')

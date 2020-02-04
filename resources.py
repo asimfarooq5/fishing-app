@@ -8,7 +8,7 @@ from flask_restful import reqparse, Resource
 from flask_restful.inputs import boolean
 
 from models import Angler, Specie, Competition, Submission, db, Score, Image
-from serializers import AnglerSchema, SpeciesSchema, CompetitionSchema, SubmissionSchema, ScoreSchema
+from serializers import AnglerSchema, SpeciesSchema, CompetitionSchema, SubmissionSchema, ScoreSchema, ImageSchema
 
 image_path = op.join(op.dirname(__file__), "images")
 try:
@@ -72,42 +72,44 @@ class SubmissionResource(Resource):
         parser.add_argument('image', help='Captured Fish Image', type=werkzeug.datastructures.FileStorage,
                             location='files', required=False, action='append')
         args = parser.parse_args(strict=True)
+
         submission = Submission.query.filter(Submission.angler_uid == args['angler_uid']).first()
-        if args['style'] == '1' and len(args['image']) > 2:
-            return "more then 2 images not allowed in selected style"
+        angler = Angler.query.filter((Angler.uid == args['angler_uid'])).first()
+        competition = Competition.query.filter((Competition.uid == args['comp_uid'])).first()
+
         count = 1
         image1 = Image()
         if args['image']:
+            if args['style'] == '1' and len(args['image']) > 2:
+                return "more then 2 images not allowed in selected style", 400
             images = args['image']
             filename = ''
-            species = Specie.query.filter(Specie.uid == args['specie_uid']).first()
+            specie = Specie.query.filter(Specie.uid == args['specie_uid']).first()
             for image in images:
-                filename = str(count) + "-" + args['device_id'] + "-" + species.specie + "-" + args[
+                filename = str(count) + "-" + args['device_id'] + "-" + specie.specie + "-" + args[
                     "length"] + "." + image.filename.split('.')[-1]
-                print(filename)
                 count += 1
                 image.save(os.path.abspath(os.path.join(image_path, filename)))
+                image1.angler = angler.name
                 image1.angler_uid = args['angler_uid']
+                image1.competition = competition.name
                 image1.comp_uid = args['comp_uid']
+                image1.specie = specie.specie
                 image1.specie_uid = args['specie_uid']
                 image1.image = filename
                 db.session.add(image1)
                 db.session.commit()
 
-        angler = Angler.query.filter((Angler.uid == args['angler_uid'])).first()
-
-        competition = Competition.query.filter((Competition.uid == args['comp_uid'])).first()
-
         post = Submission()
         post.device_id = args['device_id']
         post.style = args['style']
-        post.score = int(species.score) * int(args['length'])
+        post.score = int(specie.score) * int(args['length'])
         post.length = args['length']
         post.angler_uid = args['angler_uid']
         post.comp_uid = args['comp_uid']
         post.specie_uid = args['specie_uid']
         post.competition_name = competition.name
-        post.specie_name = species.specie
+        post.specie_name = specie.specie
         post.angler_name = angler.name
         if args['friend']:
             post.friend = True
@@ -119,40 +121,24 @@ class SubmissionResource(Resource):
         schema = SubmissionSchema()
         return schema.dump(post), 201
 
-    def delete(self):
-        parser = reqparse.RequestParser(bundle_errors=True)
-        parser.add_argument('device_id', type=str, help='Device id', required=False)
-        parser.add_argument('image', type=str, help='Image name', required=False)
-        args = parser.parse_args(strict=True)
 
-        device = Submission.query.filter(
-            (Submission.device_id == args['device_id']) |
-            (Submission.image == args['image'])).first()
-        if not device:
-            return "", 404
-        db.session.delete(device)
-        db.session.commit()
-
-        return "", 204
-
+class ImageResource(Resource):
     def get(self):
         parser = reqparse.RequestParser(bundle_errors=True)
-        parser.add_argument('device_id', type=str, help='Device id', required=False)
+        parser.add_argument('angler_uid', type=str, help='Angler id', required=False)
         args = parser.parse_args(strict=True)
 
-        images = SubmissionSchema(many=True).dump(Submission.query.filter_by(
-            device_id=args['device_id']).all())
+        images = ImageSchema(many=True).dump(Image.query.filter_by(
+            angler_uid=args['angler_uid']).all())
 
         return images, 200
 
-
-class ImageResource(Resource):
     def delete(self):
         parser = reqparse.RequestParser(bundle_errors=True)
-        parser.add_argument('image_uid', type=str, help='Image name', required=False)
+        parser.add_argument('image_uid', type=str, help='Image_uid', required=False)
         args = parser.parse_args(strict=True)
 
-        image = Submission.query.filter((Submission.device_id == args['image_uid'])).first()
+        image = Image.query.filter((Image.uid == args['image_uid'])).first()
         if not image:
             return "", 404
         db.session.delete(image)
@@ -179,7 +165,6 @@ class ScoreResource(Resource):
         competition = Competition.query.filter((Competition.uid == args['comp_uid'])).first()
         if not competition:
             return "Not found", 404
-        print(angler)
         score = Score(**args)
         score.angler = angler.name
         score.specie = specie.specie
