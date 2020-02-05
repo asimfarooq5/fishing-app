@@ -14,7 +14,7 @@ class AnglerSchema(ma.Schema):
 class SpeciesSchema(ma.Schema):
     class Meta:
         model = Specie
-        fields = ('uid', 'species',)
+        fields = ('uid', 'specie',)
 
 
 class CompetitionSchema(ma.Schema):

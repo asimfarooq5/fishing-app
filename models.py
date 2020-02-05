@@ -54,6 +54,7 @@ class Submission(db.Model):
 
 class Image(db.Model):
     uid = db.Column(db.Integer, primary_key=True)
+    device_id = db.Column(db.String(250), nullable=True)
     angler_uid = db.Column(db.Integer, db.ForeignKey("angler.uid"))
     specie_uid = db.Column(db.Integer, db.ForeignKey("specie.uid"))
     comp_uid = db.Column(db.Integer, db.ForeignKey("competition.uid"))

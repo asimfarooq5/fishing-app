@@ -1,6 +1,5 @@
 import os
 import os.path as op
-from datetime import date
 
 import werkzeug
 
@@ -90,6 +89,7 @@ class SubmissionResource(Resource):
                     "length"] + "." + image.filename.split('.')[-1]
                 count += 1
                 image.save(os.path.abspath(os.path.join(image_path, filename)))
+                image1.device_id = args['device_id']
                 image1.angler = angler.name
                 image1.angler_uid = args['angler_uid']
                 image1.competition = competition.name
@@ -99,7 +99,6 @@ class SubmissionResource(Resource):
                 image1.image = filename
                 db.session.add(image1)
                 db.session.commit()
-
         post = Submission()
         post.device_id = args['device_id']
         post.style = args['style']
@@ -125,11 +124,11 @@ class SubmissionResource(Resource):
 class ImageResource(Resource):
     def get(self):
         parser = reqparse.RequestParser(bundle_errors=True)
-        parser.add_argument('angler_uid', type=str, help='Angler id', required=False)
+        parser.add_argument('device_uid', type=str, help='Device id', required=False)
         args = parser.parse_args(strict=True)
 
         images = ImageSchema(many=True).dump(Image.query.filter_by(
-            angler_uid=args['angler_uid']).all())
+            device_id=args['device_uid']).all())
 
         return images, 200
 
