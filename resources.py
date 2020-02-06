@@ -112,6 +112,8 @@ class SubmissionResource(Resource):
         post.angler_name = angler.name
         if args['friend']:
             post.friend = True
+        else:
+            post.friend = False
         post.image = filename
 
         db.session.add(post)
