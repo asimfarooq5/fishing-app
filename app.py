@@ -1,7 +1,6 @@
-import os.path as op
-
 from flask import Flask, render_template, session, flash, redirect, request, make_response, send_from_directory, url_for
 from flask_admin import AdminIndexView, expose
+from flask_admin.menu import MenuLink
 from flask_restful import Api, abort
 from werkzeug.security import check_password_hash
 
@@ -15,7 +14,6 @@ from resources import AnglerResource, SpeciesResource, CompetitionResource, Subm
 
 UPLOAD_FOLDER = './upload'
 app = Flask(__name__, static_folder='images')
-path = op.join(op.dirname(__file__), 'statics')
 app.config['SECRET_KEY'] = '5791628bb0b13ce0c676dfde280ba245'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///main.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -62,7 +60,7 @@ def login():
             resp = make_response(redirect('/content'))
             resp.set_cookie('username', request.form['username'])
             return redirect('/angler')
-        flash('Invalid Email or  Password')
+        # flash('Invalid Email or  Password')
         return render_template('login.html')
 
     session['logged_in'] = False
@@ -100,5 +98,6 @@ if __name__ == '__main__':
     admin.add_view(SpeciesModelView(Specie, db.session, url='/specie'))
     admin.add_view(CompetitionModelView(Competition, db.session, url='/competition'))
     admin.add_view(ScoreModelView(Score, db.session, url='/score', name='Score'))
+    admin.add_link(MenuLink(name='Logout', category='', url="/logout"))
 
     app.run(host='0.0.0.0', port=5000, debug=True)
