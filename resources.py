@@ -116,6 +116,34 @@ class SubmissionResource(Resource):
 
         db.session.add(post)
         db.session.commit()
+        score = Score.query.filter(
+            (Score.angler_uid == int(args['angler_uid'])) & (Score.comp_uid == int(args['comp_uid'])) &
+            Score.specie_uid == int(args['specie_uid'])).first()
+        if not score:
+            new_score = Score()
+            new_score.angler_uid = args['angler_uid']
+            new_score.angler = angler.name
+            new_score.comp_uid = args['comp_uid']
+            new_score.competition = competition.name
+            new_score.specie_uid = args['specie_uid']
+            new_score.specie = specie.specie
+            new_score.score = 0
+            new_score.score = int(post.score) + new_score.score
+            db.session.add(new_score)
+            db.session.commit()
+            print('not')
+
+        if score:
+            print(score)
+            score.angler_uid = args['angler_uid']
+            score.angler = angler.name
+            score.comp_uid = args['comp_uid']
+            score.competition = competition.name
+            score.specie_uid = args['specie_uid']
+            score.specie = specie.specie
+            score.score = int(post.score) + int(score.score)
+            db.session.commit()
+            print('if')
 
         schema = SubmissionSchema()
         return schema.dump(post), 201
@@ -180,7 +208,7 @@ class ScoreResource(Resource):
         parser.add_argument('comp_uid', type=str, help='competetion_uid', required=True)
         args = parser.parse_args(strict=True)
         result = []
-        score = Submission.query.order_by(Submission.score.desc())
+        score = Score.query.order_by(Score.score.desc())
         schema = ScoreSchema(many=True)
         scores = schema.dump(score)
         for curr_score in scores:
