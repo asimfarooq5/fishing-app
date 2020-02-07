@@ -60,11 +60,8 @@ def login():
             resp = make_response(redirect('/content'))
             resp.set_cookie('username', request.form['username'])
             return redirect('/angler')
-        # flash('Invalid Email or  Password')
         return render_template('login.html')
-
     session['logged_in'] = False
-    flash('Invalid Email or  Password')
     return render_template('login.html')
 
 
