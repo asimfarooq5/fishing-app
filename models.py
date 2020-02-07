@@ -23,7 +23,7 @@ class Specie(db.Model):
 
 class Competition(db.Model):
     uid = db.Column(db.Integer, primary_key=True)
-    style = db.Column(db.Integer, nullable=True)
+    style = db.Column(db.Integer, nullable=True, default=1)
     name = db.Column(db.String(50), nullable=True)
     detail = db.Column(db.String(50), nullable=True)
     score = db.Column(db.String(50), nullable=True)

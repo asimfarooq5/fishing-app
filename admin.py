@@ -1,5 +1,6 @@
 import os
 import uuid
+from pathlib import Path
 
 from flask import session
 from flask_admin.contrib.sqla import ModelView
@@ -54,6 +55,7 @@ class SpeciesModelView(MyModeView):
 class CompetitionModelView(MyModeView):
     column_list = ['name', 'detail', 'end_date', 'enabled', 'style', 'image']
     form_columns = ['name', 'detail', 'end_date', 'enabled', 'style', 'image']
+    edit_modal = True
 
     form_choices = {
         'style': [
@@ -75,6 +77,15 @@ class CompetitionModelView(MyModeView):
     def delete_model(self, form):
         super().delete_model(form)
         os.remove(path=f'./images/{form.image}')
+
+    def update_model(self, form, model):
+        old_file = model.image
+        updated = super().update_model(form, model)
+        if updated:
+            model.image = form.data['image']
+            db.session.commit()
+            Path(os.path.join("images", old_file)).unlink()
+        return updated
 
 
 class ScoreModelView(MyModeView):
