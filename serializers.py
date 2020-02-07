@@ -33,7 +33,7 @@ class SubmissionSchema(ma.Schema):
 class ScoreSchema(ma.Schema):
     class Meta:
         model = Score
-        fields = ('score', 'angler', 'specie', 'competition')
+        fields = ('comp_uid', 'score', 'angler', 'specie', 'competition')
 
 
 class ImageSchema(ma.Schema):
