@@ -61,7 +61,7 @@ class CompetitionModelView(MyModeView):
         'style': [
             ('1', '1'),
             ('2', '2')
-        ]
+        ],
     }
 
     form_overrides = dict(image=FileUploadField)

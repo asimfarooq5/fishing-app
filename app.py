@@ -79,7 +79,7 @@ class MyAdminIndexView(AdminIndexView):
     def index(self):
         if session.get('logged_in'):
             if request.cookies.get('username'):
-                return redirect('/admin')
+                return redirect('/angler')
         if not session.get('logged_in'):
             return render_template('login.html')
         return super().index()
@@ -93,7 +93,7 @@ api.add_resource(ScoreResource, '/api/score/')
 api.add_resource(ImageResource, '/api/image/')
 
 if __name__ == '__main__':
-    admin = admin.Admin(app, name='Home', index_view=MyAdminIndexView(name=' '), url='/admin')
+    admin = admin.Admin(app, name='Home', index_view=MyAdminIndexView(name=' '), url='/angler')
     admin.add_view(AnglerModelView(Angler, db.session, url='/angler'))
     admin.add_view(SpeciesModelView(Specie, db.session, url='/specie'))
     admin.add_view(CompetitionModelView(Competition, db.session, url='/competition'))
