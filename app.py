@@ -1,5 +1,9 @@
+import os
+from pathlib import Path
+
 from flask import Flask, render_template, session, flash, redirect, request, make_response, send_from_directory, url_for
 from flask_admin import AdminIndexView, expose
+from flask_admin.contrib.fileadmin import FileAdmin
 from flask_admin.menu import MenuLink
 from flask_restful import Api, abort
 from werkzeug.security import check_password_hash
@@ -7,7 +11,7 @@ from werkzeug.security import check_password_hash
 import flask_admin as admin
 from admin import AnglerModelView, SpeciesModelView, CompetitionModelView, ScoreModelView
 
-from models import db, Angler, Specie, Competition, Score, Submission
+from models import db, Angler, Specie, Competition, Score, Submission, Image
 from serializers import ma
 from resources import AnglerResource, SpeciesResource, CompetitionResource, SubmissionResource, ScoreResource, \
     ImageResource
@@ -47,22 +51,40 @@ def load_user(session):
 
 @app.route('/login', methods=['POST'])
 def login():
-    if request.form['username'] == 'admin' and request.form['password'] == 'password':
-        session['logged_in'] = True
-        if 'user' in session:
-            session.pop('user')
-        return redirect('/angler')
-    user = Angler.query.filter_by(name=request.form['username']).first()
-    if user:
-        if check_password_hash(request.form['password'], request.form['password']):
+    error = None
+    if request.method == 'POST':
+        if request.form['username'] != 'admin' or request.form['password'] != 'password':
+            error = 'Invalid Credentials. Please try again.'
+        else:
             session['logged_in'] = True
-            session['user'] = {'id': user.uid}
-            resp = make_response(redirect('/content'))
-            resp.set_cookie('username', request.form['username'])
             return redirect('/angler')
-        return render_template('login.html')
-    session['logged_in'] = False
-    return render_template('login.html')
+    return render_template('login.html', error=error)
+
+
+@app.route('/gallery')
+def get_gallery():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+    else:
+        image_names = os.listdir('./images')
+        return render_template("gallery.html", image_names=image_names)
+
+
+@app.route('/upload/<filename>')
+def send_image(filename):
+    return send_from_directory("images", filename)
+
+
+@app.route('/angler/<angler_uid>', methods=['GET'])
+def get_albums(angler_uid):
+    error = None
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+    else:
+        images = Image.query.filter_by(angler_uid=int(angler_uid)).all()
+        if not images:
+            error = 'No Images Found'
+        return render_template("gallery.html", error=error, images=images)
 
 
 @app.route('/logout')
@@ -88,7 +110,6 @@ api.add_resource(CompetitionResource, '/api/competition/')
 api.add_resource(SubmissionResource, '/api/submission/')
 api.add_resource(ScoreResource, '/api/score/')
 api.add_resource(ImageResource, '/api/image/')
-
 if __name__ == '__main__':
     admin = admin.Admin(app, name='Home', index_view=MyAdminIndexView(name=' '), url='/angler')
     admin.add_view(AnglerModelView(Angler, db.session, url='/angler'))
@@ -96,5 +117,6 @@ if __name__ == '__main__':
     admin.add_view(CompetitionModelView(Competition, db.session, url='/competition'))
     admin.add_view(ScoreModelView(Score, db.session, url='/score', name='Score'))
     admin.add_link(MenuLink(name='Logout', category='', url="/logout"))
+    # admin.add_view(FileAdmin(Path(os.path.join("images")), name='All Images'))
 
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=8000, debug=True)

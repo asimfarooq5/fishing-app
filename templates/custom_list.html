@@ -1,0 +1,17 @@
+{% extends 'admin/model/list.html' %}
+{% block head %}
+    {{ super() }}
+    {{ lib.form_css() }}
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+{% endblock %}
+{% block body %}
+    <h1>Custom List View</h1>
+    {{ super() }}
+{% endblock %}
+
+{% block list_row_actions %}
+    {{ super() }}
+    <a href="{{ url_for('get_albums', angler_uid=row.uid) }}"><i class="material-icons" ,
+                                                                 style="font-size:22px;color:black">collections</i></a>
+{% endblock %}

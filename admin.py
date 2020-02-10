@@ -1,15 +1,23 @@
 import os
 import uuid
+from lib2to3.pgen2.grammar import op
 from pathlib import Path
 
 from flask import session
 from flask_admin.contrib.sqla import ModelView
 from flask_admin.form.upload import FileUploadField
+
+from werkzeug.utils import secure_filename
 from wtforms.validators import ValidationError
 
-from models import db, Score
+from models import db
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'gif', 'jpeg'}
+
+
+def thumb_name(filename):
+    name, _ = op.splitext(filename)
+    return secure_filename('%s-thumb.jpg' % name)
 
 
 def picture_validation(form, field):
@@ -40,6 +48,7 @@ class MyModeView(ModelView):
 
 
 class AnglerModelView(MyModeView):
+    list_template = 'custom_list.html'
     column_list = ['name', ]
     form_columns = ['name', ]
 
@@ -91,6 +100,7 @@ class CompetitionModelView(MyModeView):
 class ScoreModelView(MyModeView):
     can_create = False
     can_edit = False
-    # column_sortable_list = (Score.score, )
+    can_delete = False
+
     column_default_sort = ('score', True)
     column_list = ['angler', 'specie', 'competition', 'score', ]

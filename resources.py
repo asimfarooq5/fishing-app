@@ -7,7 +7,8 @@ from flask_restful import reqparse, Resource
 from flask_restful.inputs import boolean
 
 from models import Angler, Specie, Competition, Submission, db, Score, Image
-from serializers import AnglerSchema, SpeciesSchema, CompetitionSchema, SubmissionSchema, ScoreSchema, ImageSchema
+from serializers import AnglerSchema, SpeciesSchema, CompetitionSchema, \
+    SubmissionSchema, ScoreSchema, ImageSchema
 
 image_path = op.join(op.dirname(__file__), "images")
 try:
