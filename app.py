@@ -83,7 +83,7 @@ def get_albums(angler_uid):
     else:
         images = Image.query.filter_by(angler_uid=int(angler_uid)).all()
         if not images:
-            error = 'No Images Found'
+            error = 'Empty Directory'
         return render_template("gallery.html", error=error, images=images)
 
 
