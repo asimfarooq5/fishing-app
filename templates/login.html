@@ -1,4 +1,29 @@
 <link rel="stylesheet" href="/images/style.css" type="text/css">
+{% block head %}
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        .alert {
+            padding: 20px;
+            background-color: #f44336;
+            color: white;
+        }
+
+        .closebtn {
+            margin-left: 15px;
+            color: white;
+            font-weight: bold;
+            float: right;
+            font-size: 22px;
+            line-height: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .closebtn:hover {
+            color: black;
+        }
+    </style>
+{% endblock %}
 {% block body %}
     {% if session['logged_in'] %}
         <p>You're logged in already!</p>
@@ -26,8 +51,10 @@
                         <input type="submit" value="Log in" class="btn btn-primary btn-large btn-block">
                         <br>
                         {% if error %}
-                            <p class="error"><strong><span style="color:red">Error:</span></strong> {{ error }}
-                        {% endif %}
+                            <div class="alert">
+                                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                                <strong>Error : </strong> {{ error }}
+                            </div>                        {% endif %}
                     </div>
                 </div>
             </div>
