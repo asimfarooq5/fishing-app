@@ -101,7 +101,7 @@ class MyAdminIndexView(AdminIndexView):
                 return redirect('/angler')
         if not session.get('logged_in'):
             return render_template('login.html')
-        return super().index()
+        return redirect('/angler')
 
 
 api.add_resource(AnglerResource, '/api/angler/')
