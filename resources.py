@@ -173,8 +173,8 @@ class ImageResource(Resource):
         if not image:
             return "", 404
         db.session.delete(image)
-        Path(os.path.join("images", image.image)).unlink()
         db.session.commit()
+        Path(os.path.join("images", image.image)).unlink()
 
         return "", 204
 
