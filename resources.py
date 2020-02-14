@@ -82,7 +82,7 @@ class SubmissionResource(Resource):
         image1 = Image()
         if args['image']:
             imagess = ImageSchema(many=True).dump(Image.query.filter(
-                (Image.device_id == args['device_uid']) &
+                (Image.device_id == args['device_id']) &
                 (Image.angler_uid == args['angler_uid']) &
                 (Image.specie_uid == args['specie_uid'])).all())
             if len(imagess) == 2:
