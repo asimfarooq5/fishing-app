@@ -110,7 +110,7 @@ class ScoreModelView(MyModeView):
     can_delete = True
 
     column_default_sort = ('score', True)
-    column_list = ['angler', 'specie', 'competition', 'score', ]
+    column_list = ['angler', 'competition', 'score', ]
 
 
 class SponerModelView(MyModeView):
