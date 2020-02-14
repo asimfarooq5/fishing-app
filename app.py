@@ -120,4 +120,4 @@ if __name__ == '__main__':
     admin.add_link(MenuLink(name='Logout', category='', url="/logout"))
     # admin.add_view(FileAdmin(Path(os.path.join("images")), name='All Images'))
 
-    app.run(host='0.0.0.0', port=8000, debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)
