@@ -14,7 +14,7 @@ from admin import AnglerModelView, SpeciesModelView, CompetitionModelView, Score
 from models import db, Angler, Specie, Competition, Score, Submission, Image
 from serializers import ma
 from resources import AnglerResource, SpeciesResource, CompetitionResource, SubmissionResource, ScoreResource, \
-    ImageResource, CheckImages
+    ImageResource
 
 UPLOAD_FOLDER = './upload'
 app = Flask(__name__, static_folder='images')
