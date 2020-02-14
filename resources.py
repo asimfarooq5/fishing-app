@@ -81,6 +81,12 @@ class SubmissionResource(Resource):
         count = 1
         image1 = Image()
         if args['image']:
+            imagess = ImageSchema(many=True).dump(Image.query.filter(
+                (Image.device_id == args['device_uid']) &
+                (Image.angler_uid == args['angler_uid']) &
+                (Image.specie_uid == args['specie_uid'])).all())
+            if len(imagess) == 2:
+                return "Max[2] Limit Exceeded for this specie ", 400
             if args['style'] == '1' and len(args['image']) > 2:
                 return "more then 2 images not allowed in selected style", 400
             images = args['image']
@@ -98,6 +104,7 @@ class SubmissionResource(Resource):
                 image1.comp_uid = args['comp_uid']
                 image1.specie = specie.specie
                 image1.specie_uid = args['specie_uid']
+                image1.length = args['length']
                 image1.image = filename
                 db.session.add(image1)
                 db.session.commit()

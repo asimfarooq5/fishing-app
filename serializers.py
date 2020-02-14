@@ -39,4 +39,4 @@ class ScoreSchema(ma.Schema):
 class ImageSchema(ma.Schema):
     class Meta:
         model = Score
-        fields = ('uid', 'image', 'angler', 'specie', 'competition')
+        fields = ('uid', 'image', 'angler', 'specie', 'length', 'competition')
