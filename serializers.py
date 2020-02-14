@@ -45,4 +45,4 @@ class ImageSchema(ma.Schema):
 class SponserSchema(ma.Schema):
     class Meta:
         model = Score
-        fields = ('uid', 'sponser')
+        fields = ('sponser')
