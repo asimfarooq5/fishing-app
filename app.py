@@ -1,20 +1,17 @@
 import os
-from pathlib import Path
 
-from flask import Flask, render_template, session, flash, redirect, request, make_response, send_from_directory, url_for
+from flask import Flask, render_template, session, redirect, request, send_from_directory, url_for
 from flask_admin import AdminIndexView, expose
-from flask_admin.contrib.fileadmin import FileAdmin
 from flask_admin.menu import MenuLink
 from flask_restful import Api, abort
-from werkzeug.security import check_password_hash
 
 import flask_admin as admin
-from admin import AnglerModelView, SpeciesModelView, CompetitionModelView, ScoreModelView
+from admin import AnglerModelView, SpeciesModelView, CompetitionModelView, ScoreModelView, SponerModelView
 
-from models import db, Angler, Specie, Competition, Score, Submission, Image
+from models import db, Angler, Specie, Competition, Score, Submission, Image, Sponser
 from serializers import ma
 from resources import AnglerResource, SpeciesResource, CompetitionResource, SubmissionResource, ScoreResource, \
-    ImageResource
+    ImageResource, SponerResource
 
 UPLOAD_FOLDER = './upload'
 app = Flask(__name__, static_folder='images')
@@ -110,6 +107,7 @@ api.add_resource(CompetitionResource, '/api/competition/')
 api.add_resource(SubmissionResource, '/api/submission/')
 api.add_resource(ScoreResource, '/api/score/')
 api.add_resource(ImageResource, '/api/image/')
+api.add_resource(SponerResource, '/api/sponser/')
 
 if __name__ == '__main__':
     admin = admin.Admin(app, name='Home', index_view=MyAdminIndexView(name=' '), url='/angler')
@@ -117,6 +115,7 @@ if __name__ == '__main__':
     admin.add_view(SpeciesModelView(Specie, db.session, url='/specie'))
     admin.add_view(CompetitionModelView(Competition, db.session, url='/competition'))
     admin.add_view(ScoreModelView(Score, db.session, url='/score', name='Score'))
+    admin.add_view(SponerModelView(Sponser, db.session, url='/sponser', name='Sponser'))
     admin.add_link(MenuLink(name='Logout', category='', url="/logout"))
     # admin.add_view(FileAdmin(Path(os.path.join("images")), name='All Images'))
 

@@ -7,9 +7,9 @@ import werkzeug
 from flask_restful import reqparse, Resource
 from flask_restful.inputs import boolean
 
-from models import Angler, Specie, Competition, Submission, db, Score, Image
+from models import Angler, Specie, Competition, Submission, db, Score, Image, Sponser
 from serializers import AnglerSchema, SpeciesSchema, CompetitionSchema, \
-    SubmissionSchema, ScoreSchema, ImageSchema
+    SubmissionSchema, ScoreSchema, ImageSchema, SponserSchema
 
 image_path = op.join(op.dirname(__file__), "images")
 try:
@@ -227,3 +227,9 @@ class ScoreResource(Resource):
             if str(curr_score['comp_uid']) == args['comp_uid']:
                 result.append(curr_score)
         return result, 200
+
+
+class SponerResource(Resource):
+    def get(self):
+        schema = SponserSchema(many=True)
+        return schema.dump(Sponser.query.all())

@@ -104,3 +104,28 @@ class ScoreModelView(MyModeView):
 
     column_default_sort = ('score', True)
     column_list = ['angler', 'specie', 'competition', 'score', ]
+
+
+class SponerModelView(MyModeView):
+    form_overrides = dict(sponser=FileUploadField)
+    form_args = dict(sponser=dict(validators=[picture_validation]))
+
+    def create_model(self, form):
+        model = super().create_model(form)
+        model.sponser = form.data['sponser']
+        db.session.add(model)
+        db.session.commit()
+        return model
+
+    def delete_model(self, form):
+        super().delete_model(form)
+        os.remove(path=f'./images/{form.sponser}')
+
+    def update_model(self, form, model):
+        old_file = model.image
+        updated = super().update_model(form, model)
+        if updated:
+            model.sponser = form.data['sponser']
+            db.session.commit()
+            Path(os.path.join("images", old_file)).unlink()
+        return updated

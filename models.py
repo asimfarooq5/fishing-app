@@ -74,3 +74,8 @@ class Score(db.Model):
     angler = db.Column(db.String(50), nullable=True)
     specie = db.Column(db.String(50), nullable=True)
     competition = db.Column(db.String(50), nullable=True)
+
+
+class Sponser(db.Model):
+    uid = db.Column(db.Integer, primary_key=True)
+    sponser = db.Column(db.String(50), nullable=True)

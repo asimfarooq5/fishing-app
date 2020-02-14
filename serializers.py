@@ -40,3 +40,9 @@ class ImageSchema(ma.Schema):
     class Meta:
         model = Score
         fields = ('uid', 'image', 'angler', 'specie', 'length', 'competition')
+
+
+class SponserSchema(ma.Schema):
+    class Meta:
+        model = Score
+        fields = ('uid', 'sponser')
