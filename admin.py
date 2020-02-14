@@ -10,7 +10,7 @@ from flask_admin.form.upload import FileUploadField
 from werkzeug.utils import secure_filename
 from wtforms.validators import ValidationError
 
-from models import db
+from models import db, Specie
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'gif', 'jpeg'}
 
@@ -58,7 +58,7 @@ class AnglerModelView(MyModeView):
 
 class SpeciesModelView(MyModeView):
     column_list = ['specie', 'score']
-    form_columns = ['specie', 'score', 'style_1', 'style_2']
+    form_columns = ['specie', 'score', 'style_1', 'style_2', 'spe_rel']
 
 
 class CompetitionModelView(MyModeView):

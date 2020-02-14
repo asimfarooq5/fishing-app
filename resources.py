@@ -178,6 +178,16 @@ class ImageResource(Resource):
         image = Image.query.filter((Image.uid == args['image_uid'])).first()
         if not image:
             return "", 404
+        specie = Specie.query.filter((Specie.uid == image.specie_uid)).first()
+        print(specie.score)
+        scores = Score.query.filter(
+            (Score.angler_uid == image.angler_uid) &
+            (Score.specie_uid == image.specie_uid)).all()
+        for score in scores:
+            total = int(image.length) * int(specie.score)
+            print(score.score - total)
+            score.score = score.score - total
+            db.session.commit()
         db.session.delete(image)
         db.session.commit()
         Path(os.path.join("images", image.image)).unlink()
