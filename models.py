@@ -25,7 +25,7 @@ class Competition(db.Model):
     uid = db.Column(db.Integer, primary_key=True)
     style = db.Column(db.Integer, nullable=True, default=1)
     name = db.Column(db.String(50), nullable=True)
-    detail = db.Column(db.String(50), nullable=True)
+    detail = db.Column(db.String(5000), nullable=True)
     score = db.Column(db.String(50), nullable=True)
     enabled = db.Column(db.Boolean, default=False)
     image = db.Column(db.String(50), nullable=True)
@@ -42,7 +42,7 @@ class Submission(db.Model):
     length = db.Column(db.Integer, nullable=True)
     friend = db.Column(db.Boolean, nullable=True, default=False)
     image = db.Column(db.String(50), nullable=True)
-    score = db.Column(db.String(50), nullable=True)
+    score = db.Column(db.Integer, nullable=True)
     date = db.Column(db.String(255), default=lambda: date.today())
     angler_uid = db.Column(db.Integer, db.ForeignKey("angler.uid"))
     specie_uid = db.Column(db.Integer, db.ForeignKey("specie.uid"))
@@ -67,7 +67,7 @@ class Image(db.Model):
 
 class Score(db.Model):
     uid = db.Column(db.Integer, primary_key=True)
-    score = db.Column(db.String(50), nullable=True)
+    score = db.Column(db.Integer, nullable=True)
     angler_uid = db.Column(db.Integer, db.ForeignKey("angler.uid"))
     specie_uid = db.Column(db.Integer, db.ForeignKey("specie.uid"))
     comp_uid = db.Column(db.Integer, db.ForeignKey("competition.uid"))

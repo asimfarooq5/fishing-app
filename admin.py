@@ -62,10 +62,18 @@ class SpeciesModelView(MyModeView):
 
 
 class CompetitionModelView(MyModeView):
-    column_list = ['name', 'detail', 'end_date', 'enabled', 'style', 'image']
+    column_list = ['name', 'detail', 'end_date', 'style', 'image']
     form_columns = ['name', 'detail', 'end_date', 'enabled', 'style', 'image']
-    edit_modal = True
-
+    can_edit = True
+    form_args = {
+        'enabled': {
+            'label': 'Leader Board Enabled',
+        },
+        'image': {
+            'label': 'image',
+            'validators': [picture_validation]
+        }
+    }
     form_choices = {
         'style': [
             ('1', '1'),
@@ -74,7 +82,6 @@ class CompetitionModelView(MyModeView):
     }
 
     form_overrides = dict(image=FileUploadField)
-    form_args = dict(image=dict(validators=[picture_validation]))
 
     def create_model(self, form):
         model = super().create_model(form)
@@ -100,7 +107,7 @@ class CompetitionModelView(MyModeView):
 class ScoreModelView(MyModeView):
     can_create = False
     can_edit = False
-    can_delete = False
+    can_delete = True
 
     column_default_sort = ('score', True)
     column_list = ['angler', 'specie', 'competition', 'score', ]
