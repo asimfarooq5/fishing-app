@@ -8,8 +8,6 @@ db = SQLAlchemy()
 class Angler(db.Model):
     uid = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=True)
-    ang_rel = db.relationship('Submission', backref='angler')
-    scr_rel = db.relationship('Score', backref='anglers')
 
 
 class Specie(db.Model):
@@ -44,7 +42,7 @@ class Submission(db.Model):
     image = db.Column(db.String(50), nullable=True)
     score = db.Column(db.Integer, nullable=True)
     date = db.Column(db.String(255), default=lambda: date.today())
-    angler_uid = db.Column(db.Integer, db.ForeignKey("angler.uid"))
+    angler_uid = db.Column(db.Integer, nullable=True)
     specie_uid = db.Column(db.Integer, db.ForeignKey("specie.uid"))
     comp_uid = db.Column(db.Integer, db.ForeignKey("competition.uid"))
     angler_name = db.Column(db.String(50), nullable=True)
@@ -56,7 +54,7 @@ class Image(db.Model):
     uid = db.Column(db.Integer, primary_key=True)
     device_id = db.Column(db.String(250), nullable=True)
     length = db.Column(db.Integer, nullable=True)
-    angler_uid = db.Column(db.Integer, db.ForeignKey("angler.uid"))
+    angler_uid = db.Column(db.Integer, nullable=True)
     specie_uid = db.Column(db.Integer, db.ForeignKey("specie.uid"))
     comp_uid = db.Column(db.Integer, db.ForeignKey("competition.uid"))
     angler = db.Column(db.String(50), nullable=True)
@@ -68,7 +66,7 @@ class Image(db.Model):
 class Score(db.Model):
     uid = db.Column(db.Integer, primary_key=True)
     score = db.Column(db.Integer, nullable=True)
-    angler_uid = db.Column(db.Integer, db.ForeignKey("angler.uid"))
+    angler_uid = db.Column(db.Integer, nullable=True)
     specie_uid = db.Column(db.Integer, db.ForeignKey("specie.uid"))
     comp_uid = db.Column(db.Integer, db.ForeignKey("competition.uid"))
     angler = db.Column(db.String(50), nullable=True)

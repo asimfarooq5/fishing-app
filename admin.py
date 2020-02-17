@@ -10,7 +10,7 @@ from flask_admin.form.upload import FileUploadField
 from werkzeug.utils import secure_filename
 from wtforms.validators import ValidationError
 
-from models import db, Specie
+from models import db, Specie, Submission, Image, Score
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'gif', 'jpeg'}
 
@@ -55,10 +55,32 @@ class AnglerModelView(MyModeView):
     form_overrides = dict(image=FileUploadField)
     form_args = dict(image=dict(validators=[picture_validation]))
 
+    def delete_model(self, form):
+        super().delete_model(form)
+        angler = int(form.uid)
+        print(angler)
+        submissions = Submission.query.filter_by(angler_uid=angler).all()
+        print(submissions)
+        if submissions:
+            for submission in submissions:
+                db.session.delete(submission)
+                db.session.commit()
+        images = Image.query.filter_by(angler_uid=angler).all()
+        if images:
+            for image in images:
+                db.session.delete(image)
+                db.session.commit()
+                os.remove(path=f'./images/{image.image}')
+        scores = Score.query.filter_by(angler_uid=angler).all()
+        if scores:
+            for score in scores:
+                db.session.delete(score)
+                db.session.commit()
+
 
 class SpeciesModelView(MyModeView):
     column_list = ['specie', 'score']
-    form_columns = ['specie', 'score', 'style_1', 'style_2', 'spe_rel']
+    form_columns = ['specie', 'score', 'style_1', 'style_2']
 
 
 class CompetitionModelView(MyModeView):
@@ -107,7 +129,7 @@ class CompetitionModelView(MyModeView):
 class ScoreModelView(MyModeView):
     can_create = False
     can_edit = False
-    can_delete = True
+    can_delete = False
 
     column_default_sort = ('score', True)
     column_list = ['angler', 'competition', 'score', ]

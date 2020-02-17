@@ -214,6 +214,7 @@ class ScoreResource(Resource):
         if not competition:
             return "Not found", 404
         score = Score(**args)
+        score.angler_uid = args['angler_uid']
         score.angler = angler.name
         score.specie = specie.specie
         score.competition = competition.name
