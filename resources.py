@@ -79,12 +79,6 @@ class SubmissionResource(Resource):
         competition = Competition.query.filter((Competition.uid == args['comp_uid'])).first()
 
         count = 1
-        if args['friend'] & args['image']:
-            imagess = ImageSchema(many=True).dump(Image.query.filter(
-                (Image.angler_uid == args['angler_uid']) &
-                (Image.specie_uid == args['specie_uid'])).all())
-            if len(imagess) == 2:
-                return "Max[2] Limit Exceeded for this specie ", 400
         image1 = Image()
         if args['image']:
             imagess = ImageSchema(many=True).dump(Image.query.filter(
