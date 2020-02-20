@@ -133,6 +133,7 @@ class ScoreModelView(MyModeView):
     column_list = ['angler', 'competition', 'score', ]
 
 
+
 class SponerModelView(MyModeView):
     form_overrides = dict(sponser=FileUploadField)
     form_args = dict(sponser=dict(validators=[picture_validation]))
