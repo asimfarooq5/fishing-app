@@ -127,7 +127,7 @@ class CompetitionModelView(MyModeView):
 class ScoreModelView(MyModeView):
     can_create = False
     can_edit = False
-    can_delete = False
+    can_delete = True
 
     column_default_sort = ('score', True)
     column_list = ['angler', 'competition', 'score', ]
