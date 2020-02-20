@@ -178,6 +178,10 @@ class ImageResource(Resource):
         if not image:
             return "", 404
         specie = Specie.query.filter((Specie.uid == image.specie_uid)).first()
+        submissons = Submission.query.filter((Submission.specie_uid == image.specie_uid)).all()
+        for sub in submissons:
+            db.session.delete(image)
+            db.session.commit(sub)
         scores = Score.query.filter(
             (Score.angler_uid == image.angler_uid) &
             (Score.specie_uid == image.specie_uid)).all()
