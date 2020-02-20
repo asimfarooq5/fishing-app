@@ -180,8 +180,8 @@ class ImageResource(Resource):
         specie = Specie.query.filter((Specie.uid == image.specie_uid)).first()
         submissons = Submission.query.filter((Submission.specie_uid == image.specie_uid)).all()
         for sub in submissons:
-            db.session.delete(image)
-            db.session.commit(sub)
+            db.session.delete(sub)
+            db.session.commit()
         scores = Score.query.filter(
             (Score.angler_uid == image.angler_uid) &
             (Score.specie_uid == image.specie_uid)).all()
