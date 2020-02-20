@@ -58,9 +58,7 @@ class AnglerModelView(MyModeView):
     def delete_model(self, form):
         super().delete_model(form)
         angler = int(form.uid)
-        print(angler)
         submissions = Submission.query.filter_by(angler_uid=angler).all()
-        print(submissions)
         if submissions:
             for submission in submissions:
                 db.session.delete(submission)

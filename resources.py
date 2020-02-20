@@ -1,6 +1,7 @@
 import os
 import os.path as op
 from pathlib import Path
+from datetime import datetime
 
 import werkzeug
 
@@ -74,29 +75,33 @@ class SubmissionResource(Resource):
                             location='files', required=False, action='append')
         args = parser.parse_args(strict=True)
 
-        submission = Submission.query.filter(Submission.angler_uid == args['angler_uid']).first()
         angler = Angler.query.filter((Angler.uid == args['angler_uid'])).first()
+        if not angler:
+            return 'no angler', 404
+        specie = Specie.query.filter(Specie.uid == args['specie_uid']).first()
+        if not specie:
+            return 'no specie', 404
         competition = Competition.query.filter((Competition.uid == args['comp_uid'])).first()
+        if not competition:
+            return 'no competetion', 404
 
-        count = 1
         image1 = Image()
         if args['image']:
             imagess = ImageSchema(many=True).dump(Image.query.filter(
-                (Image.device_id == args['device_id']) &
                 (Image.angler_uid == args['angler_uid']) &
                 (Image.specie_uid == args['specie_uid'])).all())
             if len(imagess) == 2:
                 return "Max[2] Limit Exceeded for this specie ", 400
             if args['style'] == '1' and len(args['image']) > 2:
                 return "more then 2 images not allowed in selected style", 400
-            images = args['image']
             filename = ''
-            specie = Specie.query.filter(Specie.uid == args['specie_uid']).first()
+            images = args['image']
             for image in images:
-                filename = str(count) + "-" + args['device_id'] + "-" + specie.specie + "-" + args[
-                    "length"] + "." + image.filename.split('.')[-1]
-                count += 1
-                image.save(os.path.abspath(os.path.join(image_path, filename)))
+                filename = "" + args['device_id'] + "-" + specie.specie + "-" + \
+                           args["length"] + "-" + "".join(str(datetime.now()).split('.')[0]).replace(" ", "") \
+                           + '.' + image.filename.split('.')[-1]
+                print(filename)
+
                 image1.device_id = args['device_id']
                 image1.angler = angler.name
                 image1.angler_uid = args['angler_uid']
@@ -108,6 +113,7 @@ class SubmissionResource(Resource):
                 image1.image = filename
                 db.session.add(image1)
                 db.session.commit()
+                image.save(os.path.abspath(os.path.join(image_path, filename)))
         post = Submission()
         post.device_id = args['device_id']
         post.style = args['style']
@@ -136,10 +142,8 @@ class SubmissionResource(Resource):
             new_score.score = int(post.score) + new_score.score
             db.session.add(new_score)
             db.session.commit()
-            print('not')
 
         if score:
-            print(score)
             score.angler_uid = args['angler_uid']
             score.angler = angler.name
             score.comp_uid = args['comp_uid']
@@ -148,7 +152,6 @@ class SubmissionResource(Resource):
             score.specie = specie.specie
             score.score = int(post.score) + int(score.score)
             db.session.commit()
-            print('if')
 
         schema = SubmissionSchema()
         return schema.dump(post), 201
@@ -174,13 +177,11 @@ class ImageResource(Resource):
         if not image:
             return "", 404
         specie = Specie.query.filter((Specie.uid == image.specie_uid)).first()
-        print(specie.score)
         scores = Score.query.filter(
             (Score.angler_uid == image.angler_uid) &
             (Score.specie_uid == image.specie_uid)).all()
         for score in scores:
             total = int(image.length) * int(specie.score)
-            print(score.score - total)
             score.score = score.score - total
             db.session.commit()
         db.session.delete(image)

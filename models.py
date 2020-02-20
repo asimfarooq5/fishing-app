@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import datetime
 
 from flask_sqlalchemy import SQLAlchemy
 
@@ -29,7 +29,7 @@ class Competition(db.Model):
     image = db.Column(db.String(50), nullable=True)
     cut_off_time = db.Column(db.String(50), nullable=True)
     end_date = db.Column(db.String(50), nullable=True)
-    start_date = db.Column(db.String(255), default=lambda: date.today())
+    start_date = db.Column(db.String(255), default=lambda: str(datetime.now()).split('.')[0])
     comp_rel = db.relationship('Submission', backref='competition')
 
 
@@ -41,7 +41,7 @@ class Submission(db.Model):
     friend = db.Column(db.Boolean, nullable=True, default=False)
     image = db.Column(db.String(50), nullable=True)
     score = db.Column(db.Integer, nullable=True)
-    date = db.Column(db.String(255), default=lambda: date.today())
+    date = db.Column(db.String(255), default=lambda: str(datetime.now()).split('.')[0])
     angler_uid = db.Column(db.Integer, nullable=True)
     specie_uid = db.Column(db.Integer, db.ForeignKey("specie.uid"))
     comp_uid = db.Column(db.Integer, db.ForeignKey("competition.uid"))
