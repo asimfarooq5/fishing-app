@@ -117,7 +117,7 @@ if __name__ == '__main__':
     admin.add_view(CompetitionModelView(Competition, db.session, url='/competition'))
     admin.add_view(ScoreModelView(Score, db.session, url='/score', name='Score'))
     admin.add_view(SponerModelView(Sponser, db.session, url='/sponser', name='Sponser'))
-    admin.add_view(ModelView(Submission, db.session))
+    admin.add_view(ModelView(Image, db.session))
     admin.add_link(MenuLink(name='Logout', category='', url="/logout"))
     # admin.add_view(FileAdmin(Path(os.path.join("images")), name='All Images'))
 
