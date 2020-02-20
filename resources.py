@@ -100,7 +100,6 @@ class SubmissionResource(Resource):
                 filename = "" + args['device_id'] + "-" + specie.specie + "-" + \
                            args["length"] + "-" + "".join(str(datetime.now()).split('.')[0]).replace(" ", "") \
                            + '.' + image.filename.split('.')[-1]
-                print(filename)
                 image.save(os.path.abspath(os.path.join(image_path, filename)))
                 image1.device_id = args['device_id']
                 image1.angler = angler.name
@@ -117,7 +116,7 @@ class SubmissionResource(Resource):
         post = Submission()
         post.device_id = args['device_id']
         post.style = args['style']
-        post.score = int(specie.score) * int(args['length'])
+        post.score = float(specie.score) * float(args['length'])
         post.length = args['length']
         post.angler_uid = args['angler_uid']
         post.comp_uid = args['comp_uid']
@@ -130,7 +129,7 @@ class SubmissionResource(Resource):
         db.session.add(post)
         db.session.commit()
         score = Score.query.filter(
-            (Score.angler_uid == int(args['angler_uid'])) & (Score.comp_uid == int(args['comp_uid']))).first()
+            (Score.angler_uid == float(args['angler_uid'])) & (Score.comp_uid == float(args['comp_uid']))).first()
         if not score:
             new_score = Score()
             new_score.angler_uid = args['angler_uid']
@@ -140,7 +139,7 @@ class SubmissionResource(Resource):
             new_score.specie_uid = args['specie_uid']
             new_score.specie = specie.specie
             new_score.score = 0
-            new_score.score = int(post.score) + new_score.score
+            new_score.score = float(post.score) + new_score.score
             db.session.add(new_score)
             db.session.commit()
 
@@ -151,7 +150,7 @@ class SubmissionResource(Resource):
             score.competition = competition.name
             score.specie_uid = args['specie_uid']
             score.specie = specie.specie
-            score.score = int(post.score) + int(score.score)
+            score.score = float(post.score) + float(score.score)
             db.session.commit()
 
         schema = SubmissionSchema()
