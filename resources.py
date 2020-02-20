@@ -185,7 +185,7 @@ class ImageResource(Resource):
             (Score.angler_uid == image.angler_uid) &
             (Score.specie_uid == image.specie_uid)).all()
         for score in scores:
-            total = int(image.length) * int(specie.score)
+            total = float(image.length) * float(specie.score)
             score.score = score.score - total
             db.session.commit()
         db.session.delete(image)
