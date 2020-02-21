@@ -189,6 +189,8 @@ class ImageResource(Resource):
         for score in scores:
             total = float(image.length) * float(specie.score)
             score.score = score.score - total
+            if total == 0:
+                db.session.delete(score)
             db.session.commit()
         db.session.delete(image)
         db.session.commit()
