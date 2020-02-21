@@ -85,7 +85,8 @@ def get_albums(angler_uid):
                                                  (Submission.length == image.length) &
                                                  (Submission.device_id == image.device_id) &
                                                  (Submission.image == image.image)).first()
-            dates.append(submission.date)
+            if submission:
+                dates.append(submission.date)
         if not images:
             error = 'Empty Directory'
         return render_template("gallery.html", error=error, images=images, date=dates)
