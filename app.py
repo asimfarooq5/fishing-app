@@ -83,7 +83,8 @@ def get_albums(angler_uid):
         for image in images:
             submission = Submission.query.filter((Submission.angler_uid == image.angler_uid) &
                                                  (Submission.length == image.length) &
-                                                 (Submission.device_id == image.device_id)).first()
+                                                 (Submission.device_id == image.device_id) &
+                                                 (Submission.image == image.image)).first()
             dates.append(submission.date)
         if not images:
             error = 'Empty Directory'
