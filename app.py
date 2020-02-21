@@ -9,7 +9,7 @@ import flask_admin as admin
 from admin import AnglerModelView, SpeciesModelView, CompetitionModelView, ScoreModelView, SponerModelView
 
 from models import db, Angler, Specie, Competition, Score, Submission, Image, Sponser
-from serializers import ma
+from serializers import ma, ImageSchema, SubmissionSchema
 from resources import AnglerResource, SpeciesResource, CompetitionResource, SubmissionResource, ScoreResource, \
     ImageResource, SponerResource
 
@@ -79,9 +79,14 @@ def get_albums(angler_uid):
         return redirect(url_for('login'))
     else:
         images = Image.query.filter_by(angler_uid=int(angler_uid)).all()
+        for image in images:
+            submisson = Submission.query.filter((Submission.angler_uid == image.angler_uid) &
+                                                (Submission.length == image.length) &
+                                                (Submission.device_id == image.device_id)).first()
+            print(submisson.date)
         if not images:
             error = 'Empty Directory'
-        return render_template("gallery.html", error=error, images=images)
+        return render_template("gallery.html", error=error, images=images, submisson=submisson)
 
 
 @app.route('/logout')
