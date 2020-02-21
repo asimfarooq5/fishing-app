@@ -75,18 +75,19 @@ def send_image(filename):
 @app.route('/angler/<angler_uid>', methods=['GET'])
 def get_albums(angler_uid):
     error = None
+    dates = []
     if not session.get('logged_in'):
         return redirect(url_for('login'))
     else:
         images = Image.query.filter_by(angler_uid=int(angler_uid)).all()
         for image in images:
-            submisson = Submission.query.filter((Submission.angler_uid == image.angler_uid) &
-                                                (Submission.length == image.length) &
-                                                (Submission.device_id == image.device_id)).first()
-            print(submisson.date)
+            submission = Submission.query.filter((Submission.angler_uid == image.angler_uid) &
+                                                 (Submission.length == image.length) &
+                                                 (Submission.device_id == image.device_id)).first()
+            dates.append(submission.date)
         if not images:
             error = 'Empty Directory'
-        return render_template("gallery.html", error=error, images=images, submisson=submisson)
+        return render_template("gallery.html", error=error, images=images, date=dates)
 
 
 @app.route('/logout')
