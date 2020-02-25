@@ -88,6 +88,7 @@ class SubmissionResource(Resource):
         image1 = Image()
         if args['image']:
             imagess = ImageSchema(many=True).dump(Image.query.filter(
+                (Image.comp_uid == args['comp_uid']) &
                 (Image.angler_uid == args['angler_uid']) &
                 (Image.specie_uid == args['specie_uid'])).all())
             if len(imagess) >= 2:
