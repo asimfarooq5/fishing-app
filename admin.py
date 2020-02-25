@@ -5,7 +5,7 @@ from pathlib import Path
 
 from flask import session
 from flask_admin.contrib.sqla import ModelView
-from flask_admin.form.upload import FileUploadField
+from flask_admin.form.upload import FileUploadField, FileUploadInput
 
 from werkzeug.utils import secure_filename
 from wtforms.validators import ValidationError
@@ -20,8 +20,16 @@ def thumb_name(filename):
     return secure_filename('%s-thumb.jpg' % name)
 
 
-def picture_validation(form, field):
+def picture_validation(form, field, ):
+    if not field.data:
+        return
+    if isinstance(field.data, str):
+        print(field.data)
+
+        return True
     if field.data:
+        print(type(field.data))
+        # 1be8a2f2 - 8e76 - 4aef - b0d0 - 51b52b3c7949.png
         filename = field.data.filename
         extension = filename.split('.')[-1]
 
@@ -81,6 +89,15 @@ class SpeciesModelView(MyModeView):
     form_columns = ['specie', 'score', 'style_1', 'style_2']
 
 
+class CustomWidget(FileUploadInput):
+    empty_template = ('<input %(file)s>')
+    data_template = ('<input %(file)s>')
+
+
+class Custom(FileUploadField):
+    widget = CustomWidget()
+
+
 class CompetitionModelView(MyModeView):
     column_list = ['name', 'detail', 'end_date', 'style', 'image']
     form_columns = ['name', 'detail', 'end_date', 'enabled', 'style', 'image']
@@ -120,7 +137,7 @@ class CompetitionModelView(MyModeView):
         if updated:
             model.image = form.data['image']
             db.session.commit()
-            Path(os.path.join("images", old_file)).unlink()
+            # Path(os.path.join("images", old_file)).unlink()
         return updated
 
 
@@ -131,7 +148,6 @@ class ScoreModelView(MyModeView):
 
     column_default_sort = ('score', True)
     column_list = ['angler', 'competition', 'score', ]
-
 
 
 class SponerModelView(MyModeView):
