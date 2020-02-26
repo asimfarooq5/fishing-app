@@ -91,6 +91,7 @@ class SubmissionResource(Resource):
                 (Image.comp_uid == args['comp_uid']) &
                 (Image.angler_uid == args['angler_uid']) &
                 (Image.specie_uid == args['specie_uid'])).all())
+
             if len(imagess) >= 2:
                 return "Max[2] Limit Exceeded for this specie ", 400
             if args['style'] == '1' and len(args['image']) > 2:
@@ -98,7 +99,7 @@ class SubmissionResource(Resource):
             filename = ''
             images = args['image']
             for image in images:
-                filename = "" + args['device_id'] + "-" + specie.specie + "-" + \
+                filename = "" + args['device_id'] + "-" + str(specie.specie).replace("/", "-") + "-" + \
                            args["length"] + "-" + "".join(str(datetime.now()).split('.')[0]).replace(" ", "") \
                            + '.' + image.filename.split('.')[-1]
                 image.save(os.path.abspath(os.path.join(image_path, filename)))
