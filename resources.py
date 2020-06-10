@@ -92,7 +92,7 @@ class SubmissionResource(Resource):
                 (Image.angler_uid == args['angler_uid']) &
                 (Image.specie_uid == args['specie_uid'])).all())
 
-            if len(imagess) >= 2:
+            if args['style'] == '1' and len(imagess) >= 2:
                 return "Max[2] Limit Exceeded for this specie ", 400
             if args['style'] == '1' and len(args['image']) > 2:
                 return "more then 2 images not allowed in selected style", 400
