@@ -46,7 +46,7 @@ def load_user(session):
         return True
 
 
-@app.route('/login', methods=['POST'])
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     error = None
     if request.method == 'POST':
@@ -63,13 +63,14 @@ def get_gallery():
     if not session.get('logged_in'):
         return redirect(url_for('login'))
     else:
-        image_names = os.listdir('./images')
+        image_names = os.listdir('./images/')
         return render_template("gallery.html", image_names=image_names)
 
 
-@app.route('/upload/<filename>')
-def send_image(filename):
-    return send_from_directory("images", filename)
+@app.route('/<angler>/image/<filename>')
+def send_image(angler, filename):
+    print(angler)
+    return send_from_directory(f"images/{angler}", filename)
 
 
 @app.route('/angler/<angler_uid>', methods=['GET'])
@@ -87,7 +88,6 @@ def get_albums(angler_uid):
                                                  (Submission.image == image.image)).first()
             if submission:
                 dates.append(submission.date)
-                print(image.image , dates)
         if not images:
             error = 'Empty Directory'
         return render_template("gallery.html", error=error, images=images, date=dates)

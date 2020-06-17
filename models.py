@@ -31,7 +31,7 @@ class Competition(db.Model):
     end_date = db.Column(db.String(50), nullable=True)
     start_date = db.Column(db.String(255), default=lambda: str(datetime.now()).split('.')[0])
     comp_rel = db.relationship('Submission', backref='competition')
-
+#     src=" {{ url_for('send_image', filename='/'+image_name.angler+'/'+image_name.image) }}
 
 class Submission(db.Model):
     uid = db.Column(db.Integer, primary_key=True)
