@@ -86,10 +86,9 @@ class AnglerModelView(MyModeView):
                 db.session.commit()
         images = Image.query.filter_by(angler_uid=angler).all()
         if images:
-            image = images[0]
-            # for image in images:
-            #     db.session.delete(image)
-            #     db.session.commit()
+            for image in images:
+                db.session.delete(image)
+                db.session.commit()
             path = path = f'./images/{image.angler}'
             shutil.rmtree(path, onerror=handler)
 
