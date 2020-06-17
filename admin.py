@@ -1,4 +1,5 @@
 import os
+import shutil
 import uuid
 from lib2to3.pgen2.grammar import op
 from pathlib import Path
@@ -10,9 +11,14 @@ from flask_admin.form.upload import FileUploadField, FileUploadInput
 from werkzeug.utils import secure_filename
 from wtforms.validators import ValidationError
 
-from models import db, Specie, Submission, Image, Score
+from models import db, Submission, Image, Score
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'gif', 'jpeg'}
+
+
+def handler(func, path, exc_info):
+    print("Inside handler")
+    print(exc_info)
 
 
 def thumb_name(filename):
@@ -63,6 +69,13 @@ class AnglerModelView(MyModeView):
     form_overrides = dict(image=FileUploadField)
     form_args = dict(image=dict(validators=[picture_validation]))
 
+    def create_model(self, form):
+        model = super().create_model(form)
+        angelr = form.data['name']
+        path = os.path.join('./images', angelr)
+        os.mkdir(path)
+        return model
+
     def delete_model(self, form):
         super().delete_model(form)
         angler = int(form.uid)
@@ -73,10 +86,13 @@ class AnglerModelView(MyModeView):
                 db.session.commit()
         images = Image.query.filter_by(angler_uid=angler).all()
         if images:
-            for image in images:
-                db.session.delete(image)
-                db.session.commit()
-                os.remove(path=f'./images/{image.image}')
+            image = images[0]
+            # for image in images:
+            #     db.session.delete(image)
+            #     db.session.commit()
+            path = path = f'./images/{image.angler}'
+            shutil.rmtree(path, onerror=handler)
+
         scores = Score.query.filter_by(angler_uid=angler).all()
         if scores:
             for score in scores:

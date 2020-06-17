@@ -9,9 +9,9 @@ import flask_admin as admin
 from admin import AnglerModelView, SpeciesModelView, CompetitionModelView, ScoreModelView, SponerModelView
 
 from models import db, Angler, Specie, Competition, Score, Submission, Image, Sponser
-from serializers import ma, ImageSchema, SubmissionSchema
-from resources import AnglerResource, SpeciesResource, CompetitionResource, SubmissionResource, ScoreResource, \
-    ImageResource, SponerResource
+from serializers import ma
+from resources import AnglerResource, SpeciesResource, CompetitionResource, \
+    SubmissionResource, ScoreResource, ImageResource, SponerResource
 
 UPLOAD_FOLDER = './upload'
 app = Flask(__name__, static_folder='images')

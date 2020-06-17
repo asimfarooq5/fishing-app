@@ -102,7 +102,8 @@ class SubmissionResource(Resource):
                 filename = "" + args['device_id'] + "-" + str(specie.specie).replace("/", "-") + "-" + \
                            args["length"] + "-" + "".join(str(datetime.now()).split('.')[0]).replace(" ", "") \
                            + '.' + image.filename.split('.')[-1]
-                image.save(os.path.abspath(os.path.join(image_path, filename)))
+                image_path1 = image_path + "/" + angler.name
+                image.save(os.path.abspath(os.path.join(image_path1, filename)))
                 image1.device_id = args['device_id']
                 image1.angler = angler.name
                 image1.angler_uid = args['angler_uid']
